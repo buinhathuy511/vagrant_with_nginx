@@ -1,0 +1,34 @@
+sequenceDiagram
+    actor User
+    participant DNS
+    participant VM as Virtual Machine
+    participant Nginx
+    participant WebFiles as Web Files
+
+    User->>DNS: Access http://bvn.com
+    activate DNS
+    Note over DNS: Check hosts file
+    DNS-->>User: Resolve to 192.168.3.4
+    deactivate DNS
+
+    User->>VM: Send HTTP request
+    activate VM
+    VM->>Nginx: Forward request
+    deactivate VM
+    
+    activate Nginx
+    Nginx->>Nginx: Validate request
+    
+    alt Valid request
+        Nginx->>WebFiles: Request content
+        activate WebFiles
+        WebFiles-->>Nginx: Return files
+        deactivate WebFiles
+        
+        Nginx-->>User: Send response with content
+    else Invalid request
+        Nginx-->>User: Return error page
+    end
+    deactivate Nginx
+
+    Note over User: Display content

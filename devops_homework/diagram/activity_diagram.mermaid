@@ -1,0 +1,19 @@
+flowchart TD
+    A[User accesses website] --> B[Enter URL http://bvn.com]
+    
+    B --> C[DNS lookup]
+    C -->|Check hosts file| D[Resolve domain to IP]
+    D -->|bvn.com -> 192.168.3.4| E[Send request to Virtual Machine]
+    
+    E --> F[Nginx Web Server receives request]
+    
+    F -->|Is request valid?| G{yes}
+    G -->|yes| H[Nginx processes request]
+    H --> I[Retrieve files from web directory]
+    I --> J[Return response to user]
+    
+    G -->|no| K[Return error page]
+    
+    J --> L[Display content to user]
+    
+    K --> L
