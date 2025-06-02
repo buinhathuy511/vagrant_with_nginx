@@ -1,0 +1,27 @@
+flowchart TB
+    subgraph Network
+        DomainMapping["Domain Mapping\n(bvn.com)"]
+        PortForwarding["Port Forwarding\n(Host:80 → Guest:80)"]
+    end
+
+    subgraph Computer
+        Vagrant["Vagrant"]
+        Browser["Web Browser"]
+        HostsFile["Hosts File\n(bvn.com → 192.168.3.4)"]
+
+        subgraph VagrantVM [Vagrant VM]
+            GuestOS["Operating System\n(Ubuntu/CentOS)"]
+            Nginx["Web Server: Nginx"]
+            WebsiteFiles["Website Files\n(index.html, etc)"]
+        end
+    end
+
+    DomainMapping --> HostsFile
+    Browser -->|Access http://bvn.com| HostsFile
+    HostsFile -->|Resolve IP| PortForwarding
+    PortForwarding -->|Forward to VM| Nginx
+    Nginx -->|Serve Content| WebsiteFiles
+    Browser -->|Receive Web Content| Nginx
+    GuestOS --> Nginx
+    Nginx --> WebsiteFiles
+    Vagrant --> GuestOS
